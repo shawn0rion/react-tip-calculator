@@ -6,9 +6,11 @@ const theme = {
     darkGreen: "#00474B",
     strongGreen: "#26C2AE",
     lightCyan: "#F3F9FA",
+    darkCyan: "#9EBBBD",
     mintGreen: "#9FE8DF",
     lightGreen: "#7F9D9F",
     red: "#E17457",
+    gray: "#5E7A7D",
   },
   fontSizes: {
     xSmall: "13px",
@@ -26,6 +28,13 @@ const GlobalStyle = createGlobalStyle`
         font-family: "Space Mono", monospace;
         margin: 0;
         box-sizing: border-box;
+    }
+
+    body{
+      height: 100vh;
+      display: grid;
+      place-items:center;
+      background-color: #d1edef;
     }
 `;
 

@@ -1,4 +1,9 @@
 import TipList from "./TipList.js";
+import Label from "./Label.js";
+import Input from "./Input.js";
+import DollarIcon from "../images/icon-dollar.svg";
+import PersonIcon from "../images/icon-person.svg";
+import StyledForm from "./styles/Form.styled";
 
 export default function Form(props) {
   const {
@@ -16,18 +21,30 @@ export default function Form(props) {
 
   // add conditional rendering for can't be 0
   return (
-    <form onSubmit={handleFormSubmit}>
-      <label htmlFor="bill">Bill: </label>
-      <span className="warning-message">
-        {bill === "0" ? "Can't be zero" : ""}
-      </span>
-      <input type="text" id="bill" value={bill} onChange={onBillChange} />
+    <StyledForm onSubmit={handleFormSubmit}>
+      <div>
+        <Label value={bill} id={"bill"} text={"Bill: "} />
+        <Input
+          img={DollarIcon}
+          id={"bill"}
+          type={"text"}
+          placeholder="0"
+          value={bill}
+          onInput={onBillChange}
+        />
+      </div>
       <TipList tipRate={tipRate} onTipRateChange={onTipRateChange} />
-      <label htmlFor="numPpl">Number of people:</label>
-      <span className="warning-message">
-        {numPpl === "0" ? "Can't be zero" : ""}
-      </span>
-      <input id="numPpl" type="text" value={numPpl} onChange={onNumPplChange} />
-    </form>
+      <div>
+        <Label value={numPpl} id="numPpl" text={"Number of People: "} />
+        <Input
+          img={PersonIcon}
+          id={"numPpl"}
+          type={"text"}
+          placeholder="0"
+          value={numPpl}
+          onInput={onNumPplChange}
+        />
+      </div>
+    </StyledForm>
   );
 }

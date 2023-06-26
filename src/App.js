@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Form from "./components/Form.js";
 import Display from "./components/Display.js";
 import { ThemeProvider } from "styled-components";
+import Container from "./components/styles/Container.styled";
 function App() {
   const [bill, setBill] = useState("");
   const [tipRate, setTipRate] = useState("");
@@ -13,14 +14,15 @@ function App() {
   const [totalAmount, setTotalAmount] = useState("");
 
   const dollarRegex = /^\d*\.?\d{0,2}$/;
+  const integerRegex = /^\d*$/;
 
   const updateDisplayState = () => {
     const newState = {
       tipAmount:
-        (parseFloat(bill) / parseInt(numPpl)) * parseFloat(tipRate / 100),
+        (parseFloat(bill) * parseFloat(tipRate / 100)) / parseInt(numPpl),
       totalAmount:
-        parseFloat(bill) / parseInt(numPpl) +
-        (parseFloat(bill) / parseInt(numPpl)) * parseFloat(tipRate / 100),
+        (parseFloat(bill) + parseFloat(bill) * parseFloat(tipRate / 100)) /
+        parseInt(numPpl),
     };
     setTipAmount(newState.tipAmount.toFixed(2));
     setTotalAmount(newState.totalAmount.toFixed(2));
@@ -28,6 +30,7 @@ function App() {
 
   const handleBillChange = (e) => {
     const value = e.target.value;
+    // input validation
     if (dollarRegex.test(value)) {
       setBill(value);
     }
@@ -35,27 +38,28 @@ function App() {
   };
 
   const handleTipRateChange = (e) => {
-    let value = e.target.textContent;
+    // filter text input
+    let value = e.target?.textContent || e.target.value;
+    value = [...value].filter((x) => integerRegex.test(x)).join("");
 
+    // add class to button
     const newActiveTip = e.target;
     if (activeTip !== "") activeTip.classList.remove("active");
-    newActiveTip.classList.add("active");
-    setActiveTip(newActiveTip);
-
-    // handle custom tip
-    if (dollarRegex.test(value)) {
-      setTipRate(value);
+    if (newActiveTip.classList.contains("tip-btn")) {
+      setActiveTip(newActiveTip);
     } else {
-      // handle set tip and remove percentage sign
-      value = [...value].filter((x) => !Number.isNaN(parseInt(x))).join("");
-      setTipRate(value);
+      setActiveTip("");
     }
+
+    // update state
+    setTipRate(value);
     updateDisplayState();
   };
 
   const handleNumPplChange = (e) => {
     const value = e.target.value;
-    const integerRegex = /^\d*$/;
+    // input validation
+
     if (integerRegex.test(value)) {
       setNumPpl(value);
     }
@@ -67,29 +71,31 @@ function App() {
     setTipRate("");
     setNumPpl("");
     setActiveTip("");
-    activeTip.classList.remove("active");
+    if (activeTip !== "") {
+      activeTip.classList.remove("active");
+    }
+    e.target.blur();
   };
 
   return (
-    <>
+    <Container>
       <ThemeProvider theme={theme}>
-        <GlobalStyle>
-          <Form
-            bill={bill}
-            tipRate={tipRate}
-            numPpl={numPpl}
-            onBillChange={handleBillChange}
-            onTipRateChange={handleTipRateChange}
-            onNumPplChange={handleNumPplChange}
-          />
-          <Display
-            tipAmount={tipAmount}
-            totalAmount={totalAmount}
-            onFormReset={handleFormReset}
-          />
-        </GlobalStyle>
+        <GlobalStyle />
+        <Form
+          bill={bill}
+          tipRate={tipRate}
+          numPpl={numPpl}
+          onBillChange={handleBillChange}
+          onTipRateChange={handleTipRateChange}
+          onNumPplChange={handleNumPplChange}
+        />
+        <Display
+          tipAmount={tipAmount}
+          totalAmount={totalAmount}
+          onFormReset={handleFormReset}
+        />
       </ThemeProvider>
-    </>
+    </Container>
   );
 }
 
